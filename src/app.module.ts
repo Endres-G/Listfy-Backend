@@ -5,6 +5,9 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './modules/users/user.module';
 import { ListModule } from './modules/lists/list.module';
+import { CollabModule } from './collab/collab.module';
+import { APP_GUARD } from '@nestjs/core';
+import { ItemsPermissionGuard } from './collab/guards/items-permission.guard';
 
 @Module({
   imports: [
@@ -42,8 +45,10 @@ import { ListModule } from './modules/lists/list.module';
     }),
     UserModule,
     ListModule,
+    CollabModule,
   ],
   controllers: [AppController],
   providers: [AppService],
+    { provide: APP_GUARD, useClass: ItemsPermissionGuard },
 })
 export class AppModule {}
