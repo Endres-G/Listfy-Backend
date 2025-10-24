@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, ManyToOne, Column, Unique, CreateDateColumn } from 'typeorm';
 import { User } from '../../users/entities/user.entity';
-import { List } from './list.entity';
+import { List } from '../../lists/entities/list.entity';
 
 export type CollaboratorRole = 'owner' | 'editor' | 'viewer';
 
@@ -10,10 +10,10 @@ export class ListCollaborator {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => List, (l) => l.collaborators, { onDelete: 'CASCADE' })
+  @ManyToOne(() => List, (l) => (l as any).collaborators, { onDelete: 'CASCADE' })
   list: List;
 
-  @ManyToOne(() => User, (u) => u.collaborations, { eager: true, onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (u) => (u as any).collaborations, { eager: true, onDelete: 'CASCADE' })
   user: User;
 
   @Column({ type: 'varchar', length: 10 })
