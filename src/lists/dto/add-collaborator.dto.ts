@@ -11,5 +11,5 @@ export class AddCollaboratorDto {
   email?: string;
 
   @IsIn(['viewer', 'editor'])
-  role: CollaboratorRole;
+  role: CollaboratorRole; 
 }
