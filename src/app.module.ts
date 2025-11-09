@@ -8,6 +8,7 @@ import { ListModule } from './modules/lists/list.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './modules/auth/auth.guard';
+import { ListItemsModule } from './modules/list-items/list-items.module';
 
 @Module({
   imports: [
@@ -46,12 +47,15 @@ import { AuthGuard } from './modules/auth/auth.guard';
     UserModule,
     ListModule,
     AuthModule,
+    ListItemsModule,
   ],
   controllers: [AppController],
-  providers: [AppService,
+  providers: [
+    AppService,
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
-    },],
+    },
+  ],
 })
 export class AppModule {}

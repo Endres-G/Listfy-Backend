@@ -42,7 +42,10 @@ export class AuthGuard implements CanActivate {
         secret: jwtConstants.secret,
       });
 
-      request['user'] = payload;
+      request['user'] = {
+        id: payload.sub,
+        ...payload,
+      };
     } catch {
       throw new UnauthorizedException({
         message: 'Token inválido!',
