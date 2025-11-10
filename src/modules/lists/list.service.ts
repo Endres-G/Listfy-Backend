@@ -28,7 +28,7 @@ export class ListService {
   async findAll(user: User) {
     return this.listRepository.find({
       where: { owner: { id: user.id } },
-      relations: ['owner'],
+      relations: ['owner', 'items'],
     });
   }
 
