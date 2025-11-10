@@ -1,0 +1,320 @@
+{
+  "info": {
+    "name": "Listify API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Coleção para testar endpoints da Listify"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"user\",\n  \"password\": \"secret\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"user\",\n  \"email\": \"user@example.com\",\n  \"password\": \"secret\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"User\",\n  \"email\": \"user@example.com\",\n  \"password\": \"secret\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"]
+            }
+          }
+        },
+        {
+          "name": "List Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"]
+            }
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated User\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", ":id"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Lists",
+      "item": [
+        {
+          "name": "Create List",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Groceries\",\n  \"description\": \"Weekly shopping\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/lists",
+              "host": ["{{baseUrl}}"],
+              "path": ["lists"]
+            }
+          }
+        },
+        {
+          "name": "List Lists",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/lists",
+              "host": ["{{baseUrl}}"],
+              "path": ["lists"]
+            }
+          }
+        },
+        {
+          "name": "Update List",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Groceries\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/lists/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["lists", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Delete List",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/lists/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["lists", ":id"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "List Items",
+      "item": [
+        {
+          "name": "Create Item",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Milk\",\n  \"quantity\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/lists/{{listId}}/items",
+              "host": ["{{baseUrl}}"],
+              "path": ["lists", "{{listId}}", "items"]
+            }
+          }
+        },
+        {
+          "name": "Assign Item",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/lists/{{listId}}/items/{{itemId}}/assign",
+              "host": ["{{baseUrl}}"],
+              "path": ["lists", "{{listId}}", "items", "{{itemId}}", "assign"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "listId",
+      "value": "1"
+    },
+    {
+      "key": "itemId",
+      "value": "1"
+    }
+  ]
+}

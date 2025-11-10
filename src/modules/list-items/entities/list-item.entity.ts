@@ -3,34 +3,37 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  OneToMany,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
+  Unique,
   UpdateDateColumn,
 } from 'typeorm';
-import { Exclude } from 'class-transformer';
 import { List } from '../../lists/entities/list.entity';
-import { ListItem } from '../../list-items/entities/list-item.entity';
+import { User } from '../../users/entities/user.entity';
 
 @Entity()
-export class User {
+@Unique(['name', 'list'])
+export class ListItem {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
   name: string;
 
-  @Column()
-  email: string;
+  @Column({ type: 'int', default: 1 })
+  quantity: number;
 
-  @Exclude()
-  @Column({ nullable: true })
-  password?: string;
+  @ManyToOne(() => List, (list) => list.items, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'listId' })
+  list: List;
 
-  @OneToMany(() => List, (list) => list.owner)
-  lists: List[];
-
-  @OneToMany(() => ListItem, (item) => item.assignedTo)
-  assignedItems: ListItem[];
+  @ManyToOne(() => User, (user) => user.assignedItems, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
+  @JoinColumn({ name: 'assignedToId' })
+  assignedTo?: User;
 
   @CreateDateColumn({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

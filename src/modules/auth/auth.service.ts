@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   Injectable,
   InternalServerErrorException,
   UnauthorizedException,
@@ -13,7 +14,7 @@ import { User } from '../users/entities/user.entity';
 export class AuthService {
   constructor(
     @InjectRepository(User)
-    private readonly listRepository: Repository<User>,
+    private readonly userRepository: Repository<User>,
     private jwtService: JwtService,
   ) {}
 
@@ -22,7 +23,7 @@ export class AuthService {
     password: string,
   ): Promise<{ name: string; access_token: string }> {
 
-    const user = await this.listRepository.findOne({
+    const user = await this.userRepository.findOne({
       where: { name: username },
     });
 
@@ -40,7 +41,7 @@ export class AuthService {
       });
     }
 
-    const payload = { name: user.name};
+    const payload = { sub: user.id, name: user.name };
 
     return {
       name: user.name,
@@ -50,39 +51,43 @@ export class AuthService {
 
   async register(
     username: string,
-    email:string,
+    email: string,
     password: string,
   ): Promise<{ access_token: string }> {
     try {
-
-      //  Criando hash da senha.
-      const salt = Number(process.env.HASH_SALT);
-      const hash = await bcrypt.hash(password, salt);
-
-      const user = await this.listRepository.create({
-          name: username,
-          password: hash,
-          email: email
+      const existingUser = await this.userRepository.findOne({
+        where: [{ email }],
       });
 
-      this.listRepository.save(user);
-
-      if (!user) {
-        throw new InternalServerErrorException({
-          message: 'Erro ao registrar novo operador.',
-        });
+      if (existingUser) {
+        throw new ConflictException('E-mail já cadastrado');
       }
 
+      const configuredSalt = Number(process.env.HASH_SALT ?? 10);
+      const saltRounds = Number.isFinite(configuredSalt) && configuredSalt > 0 ? configuredSalt : 10;
+      const hash = await bcrypt.hash(password, saltRounds);
+
+      const user = this.userRepository.create({
+        name: username,
+        password: hash,
+        email,
+      });
+
+      await this.userRepository.save(user);
+
       const payload = {
+        sub: user.id,
         name: user.name,
       };
 
-    const token= await this.jwtService.signAsync(payload);
+      const token = await this.jwtService.signAsync(payload);
       return {
-        access_token: token
+        access_token: token,
       };
-
-    } catch {
+    } catch (error) {
+      if (error instanceof ConflictException) {
+        throw error;
+      }
       throw new InternalServerErrorException({
         message: 'Erro interno.',
         func: 'register()',
