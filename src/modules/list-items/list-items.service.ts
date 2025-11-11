@@ -52,11 +52,11 @@ export class ListItemsService {
     });
 
     if (!item) {
-      throw new NotFoundException('Item não encontrado');
+      throw new NotFoundException('Item not found');
     }
 
     if (item.assignedTo) {
-      throw new ConflictException('Item já atribuído a outro usuário');
+      throw new ConflictException('Item already assigned to another user');
     }
 
     const assignee = await this.userRepository.findOne({
@@ -64,7 +64,7 @@ export class ListItemsService {
     });
 
     if (!assignee) {
-      throw new NotFoundException('Usuário não encontrado');
+      throw new NotFoundException('User not found');
     }
 
     item.assignedTo = assignee;
@@ -74,18 +74,19 @@ export class ListItemsService {
   private async getListOrFail(listId: number, user: User) {
     const list = await this.listRepository.findOne({
       where: { id: listId },
-      relations: ['owner'],
+      relations: ['owner', 'users'],
     });
 
     if (!list) {
-      throw new NotFoundException('Lista não encontrada');
+      throw new NotFoundException('List not found');
     }
 
-    const ownerId = Number(list.owner?.id);
     const requesterId = Number(user?.id);
+    const isOwner = Number(list.owner?.id) === requesterId;
+    const isMember = list.users?.some((member) => Number(member.id) === requesterId);
 
-    if (!ownerId || ownerId !== requesterId) {
-      throw new ForbiddenException('Acesso negado');
+    if (!isOwner && !isMember) {
+      throw new ForbiddenException('Access denied');
     }
 
     return list;

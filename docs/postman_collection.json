@@ -240,6 +240,31 @@
               "path": ["lists", ":id"]
             }
           }
+        },
+        {
+          "name": "Add Member to List",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": 2\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/lists/{{listId}}/members",
+              "host": ["{{baseUrl}}"],
+              "path": ["lists", "{{listId}}", "members"]
+            }
+          }
         }
       ]
     },

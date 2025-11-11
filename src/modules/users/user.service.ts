@@ -24,7 +24,7 @@ export class UserService {
     });
 
     if (existingUser) {
-      throw new ConflictException('E-mail já cadastrado');
+      throw new ConflictException('Email already registered');
     }
 
     const configuredSalt = Number(process.env.HASH_SALT ?? 10);
@@ -54,7 +54,7 @@ export class UserService {
 
   async update(id: number, dto: UpdateUserDto, user: User) {
     if (user.id !== id) {
-      throw new ForbiddenException('Você não pode atualizar outro usuário');
+      throw new ForbiddenException('You cannot update another user');
     }
 
     const target = await this.getUserEntityOrFail(id);
@@ -78,20 +78,20 @@ export class UserService {
 
   async remove(id: number, user: User) {
     if (user.id !== id) {
-      throw new ForbiddenException('Você não pode remover outro usuário');
+      throw new ForbiddenException('You cannot remove another user');
     }
 
     const target = await this.getUserEntityOrFail(id);
     await this.userRepository.softRemove(target);
 
-    return { message: 'Usuário removido com sucesso' };
+    return { message: 'User removed successfully' };
   }
 
   private async getUserEntityOrFail(id: number): Promise<User> {
     const user = await this.userRepository.findOne({ where: { id } });
 
     if (!user) {
-      throw new NotFoundException('Usuário não encontrado');
+      throw new NotFoundException('User not found');
     }
 
     return user;
