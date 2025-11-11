@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -27,6 +28,9 @@ export class User {
   password?: string;
 
   @OneToMany(() => List, (list) => list.owner)
+  ownedLists: List[];
+
+  @ManyToMany(() => List, (list) => list.users)
   lists: List[];
 
   @OneToMany(() => ListItem, (item) => item.assignedTo)

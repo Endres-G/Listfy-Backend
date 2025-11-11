@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { UpdateListDto } from './dto/update-list.dto';
 import { CreateListDto } from './dto/create-list.dto';
+import { AddListMemberDto } from './dto/add-list-member.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { GetUser } from 'src/decorators/get-user.decorator';
 import { User } from '../users/entities/user.entity';
@@ -41,5 +42,14 @@ export class ListController {
   @Delete(':id')
   async remove(@Param('id') id: number, @GetUser() user: User) {
     return this.listService.remove(id, user);
+  }
+
+  @Post(':id/members')
+  async addMember(
+    @Param('id') id: number,
+    @Body() dto: AddListMemberDto,
+    @GetUser() user: User,
+  ) {
+    return this.listService.addMember(id, dto, user);
   }
 }

@@ -4,6 +4,8 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -22,8 +24,12 @@ export class List {
   @Column({ nullable: true })
   description?: string;
 
-  @ManyToOne(() => User, (user) => user.lists, { onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (user) => user.ownedLists, { onDelete: 'CASCADE' })
   owner: User;
+
+  @ManyToMany(() => User, (user) => user.lists)
+  @JoinTable({name: 'list_users'})
+  users: User[];
 
   @OneToMany(() => ListItem, (item) => item.list)
   items: ListItem[];
