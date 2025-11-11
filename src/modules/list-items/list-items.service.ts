@@ -11,6 +11,7 @@ import { List } from '../lists/entities/list.entity';
 import { User } from '../users/entities/user.entity';
 import { CreateListItemDto } from './dto/create-list-item.dto';
 import { AssignListItemDto } from './dto/assign-list-item.dto';
+import { EditListItemDto } from './dto/edit-list-item.dto';
 
 @Injectable()
 export class ListItemsService {
@@ -43,7 +44,12 @@ export class ListItemsService {
     return this.listItemRepository.save(item);
   }
 
-  async assign(listId: number, itemId: number, dto: AssignListItemDto, user: User) {
+  async assign(
+    listId: number,
+    itemId: number,
+    dto: AssignListItemDto,
+    user: User,
+  ) {
     const list = await this.getListOrFail(listId, user);
 
     const item = await this.listItemRepository.findOne({
@@ -69,6 +75,40 @@ export class ListItemsService {
 
     item.assignedTo = assignee;
     return this.listItemRepository.save(item);
+  }
+
+  async edit(listId: number, itemId: number, dto: EditListItemDto, user: User) {
+    const list = await this.getListOrFail(listId, user);
+
+    const item = await this.listItemRepository.findOne({
+      where: { id: itemId, list: { id: listId } },
+    });
+
+    if (!item) {
+      throw new NotFoundException('Item não encontrado');
+    }
+    if (dto.name !== undefined) {
+      item.name = dto.name;
+    }
+
+    if (dto.quantity !== undefined) {
+      item.quantity = dto.quantity;
+    }
+    return this.listItemRepository.save(item);
+  }
+
+  async delete(listId: number, itemId: number, user: User) {
+    const list = await this.getListOrFail(listId, user);
+
+    const item = await this.listItemRepository.findOne({
+      where: { id: itemId, list: { id: listId } },
+    });
+
+    if (!item) {
+      throw new NotFoundException('Item não encontrado');
+    }
+
+    return this.listItemRepository.softRemove(item);
   }
 
   private async getListOrFail(listId: number, user: User) {
